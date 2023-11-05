@@ -93,7 +93,8 @@ export default {
       dalleImageUrls: [],
       imageKey: 0,
       selectedImageIndex: -1,
-      productResults: []
+      productResults: [],
+      dalleBlobs: []
     }
   },
   created(){
@@ -104,6 +105,14 @@ export default {
     async CreateImages(){
       if (this.prompt == "") return
       this.loading = true
+
+      //clear inputs
+      this.dalleImageUrls = []
+      this.selectedImageIndex = -1
+      this.productResults = []
+      this.dalleBlobs = []
+
+      //get images
       try {
         const openai = new OpenAI({
             apiKey: import.meta.env.VITE_OPENAI_API_KEY,
@@ -112,11 +121,18 @@ export default {
         let response = await openai.images.generate({
           prompt: this.prompt,
           n: 3,
-          size: "256x256"
+          size: "256x256",
+          response_format: 'b64_json'
         })
-        response.data.forEach(url => this.dalleImageUrls.push(url.url))
+        console.log('response', response)
+        
+        response.data.forEach(b64 => {
+          let blob = this.b64toBlob(b64.b64_json)
+          let url = URL.createObjectURL(blob)
+          this.dalleImageUrls.push(url)
+        })
         this.imageKey++
-
+        
         if (!response.data) {
           throw new Error("Unable to generate the image");
         }
@@ -126,12 +142,44 @@ export default {
         this.loading = false
       }
     },
+    b64toBlob(b64Data, contentType='', sliceSize=512){
+      const byteCharacters = atob(b64Data);
+      const byteArrays = [];
+
+      for (let offset = 0; offset < byteCharacters.length; offset += sliceSize) {
+        const slice = byteCharacters.slice(offset, offset + sliceSize);
+
+        const byteNumbers = new Array(slice.length);
+        for (let i = 0; i < slice.length; i++) {
+          byteNumbers[i] = slice.charCodeAt(i);
+        }
+
+        const byteArray = new Uint8Array(byteNumbers);
+        byteArrays.push(byteArray);
+      }
+
+      const blob = new Blob(byteArrays, {type: contentType});
+      return blob;
+    },
     goToLink(){
       window.location.href = "https://www.google.com/" // Replace with the desired website URL
     },
     selectImage(index){
       //highlight selected image
       this.selectedImageIndex = index
+      var url = this.dalleImageUrls[index]
+      
+      console.log('url', url)
+
+      fetch(url)
+        .then(async response => {
+          const contentType = response.headers.get('content-type')
+          const blob = await response.blob()
+          const file = new File([blob], "image.jpg", { contentType })
+          console.log(file)
+          // access file here
+        })
+
       //send image url to backend
       //process results
     }
