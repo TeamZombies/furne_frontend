@@ -1,69 +1,27 @@
-# essentials
+# Furn-E
+This Vue.js application uses the OpenAI API to generate images based on a user-provided description and presents the generated images for selection. Additionally, it displays product options based on those generated images.
+
+## Application Workflow
+
+1. Enter a room description in the provided text field.
+2. Click the "Go" button to generate images based on the description.
+3. Select your favorite image by clicking on it to see related product options.
+
+## Prerequisites
+
+This application utilizes
+
+-Vue.js
+-Vuetify
+-Vite
+-An OpenAI API key
+
+## Installation
+1. Clone the repository.
+2. Install dependencies using npm install.
+3. Set up your OpenAI API key by creating a .env file and adding VITE_OPENAI_API_KEY=YOUR_API_KEY.
 
 ## Project setup
 
-```
-# yarn
-yarn
+npm run serve
 
-# npm
-npm install
-
-# pnpm
-pnpm install
-
-# bun
-bun install
-```
-
-### Compiles and hot-reloads for development
-
-```
-# yarn
-yarn dev
-
-# npm
-npm run dev
-
-# pnpm
-pnpm dev
-
-# bun
-bun run dev
-```
-
-### Compiles and minifies for production
-
-```
-# yarn
-yarn build
-
-# npm
-npm run build
-
-# pnpm
-pnpm build
-
-# bun
-bun run build
-```
-
-### Lints and fixes files
-
-```
-# yarn
-yarn lint
-
-# npm
-npm run lint
-
-# pnpm
-pnpm lint
-
-# bun
-bun run lint
-```
-
-### Customize configuration
-
-See [Configuration Reference](https://vitejs.dev/config/).
