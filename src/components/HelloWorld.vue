@@ -66,13 +66,12 @@
           class="d-flex child-flex"
           cols="4"
         >
-          <v-card width="300" class="pa-2" @click="goToLink(result.url)">
+          <v-card width="300" class="pa-2" @click="goToLink(result.linklist.hostPageUrl)">
             <v-img
               width="300"
               aspect-ratio="1/1"
-              :src=result.imageUrl
+              :src=result.linklist.thumbnailURL
             ></v-img>
-            <div>{{result.name}}</div>
             <div>{{result.description}}</div>
           </v-card>
         </v-col>
@@ -94,7 +93,7 @@ export default {
       imageKey: 0,
       selectedImageIndex: -1,
       productResults: [],
-      dalleBlobs: []
+      file: null
     }
   },
   created(){
@@ -110,7 +109,7 @@ export default {
       this.dalleImageUrls = []
       this.selectedImageIndex = -1
       this.productResults = []
-      this.dalleBlobs = []
+      this.file = null
 
       //get images
       try {
@@ -132,7 +131,7 @@ export default {
           this.dalleImageUrls.push(url)
         })
         this.imageKey++
-        
+
         if (!response.data) {
           throw new Error("Unable to generate the image");
         }
@@ -167,22 +166,41 @@ export default {
     selectImage(index){
       //highlight selected image
       this.selectedImageIndex = index
-      var url = this.dalleImageUrls[index]
-      
-      console.log('url', url)
+      var imageUrl = this.dalleImageUrls[index]
+      const formData = new FormData()
 
-      fetch(url)
+      fetch(imageUrl)
         .then(async response => {
           const contentType = response.headers.get('content-type')
           const blob = await response.blob()
           const file = new File([blob], "image.jpg", { contentType })
-          console.log(file)
-          // access file here
+          console.log('file', file)
+          return file
+        }).then(file => {
+          formData.append('image', file)
+          console.log('formData', formData)
+          // Define the URL to your endpoint
+          const url = 'https://chriscarrollsmith--image-decomposition-api-v2-fastapi-app.modal.run/api/decompose';
+          // Make the POST request
+          fetch(url, {
+          method: 'POST',
+          body: formData // FormData will be sent as 'multipart/form-data'
+          })
+          .then(response => {
+          if (response.ok) {
+            return response.json(); // if the response is good, get the JSON from the response
+          }
+          throw new Error('Network response was not ok.'); // if the response is not good, throw an error
+          })
+          .then(data => {
+            console.log(data); // Handle the data from the response
+            data.data.forEach(o => this.productResults.push(o))
+          })
+          .catch(error => {
+          console.error('There has been a problem with your fetch operation:', error);
+          });
         })
-
-      //send image url to backend
-      //process results
-    }
-  },
+    },
+  }
 }
 </script>
