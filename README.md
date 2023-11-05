@@ -11,10 +11,10 @@ This Vue.js application uses the OpenAI API to generate images based on a user-p
 
 This application utilizes
 
--Vue.js
--Vuetify
--Vite
--An OpenAI API key
+* Vue.js
+* Vuetify
+* Vite
+* An OpenAI API key (credits needed)
 
 ## Installation
 1. Clone the repository.
@@ -23,5 +23,5 @@ This application utilizes
 
 ## Project setup
 
-npm run serve
+npm run dev
 
