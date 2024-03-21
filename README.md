@@ -9,6 +9,8 @@ This Vue.js application uses the OpenAI API to generate images based on a user-p
 2. Click the "Go" button to generate images based on the description.
 3. Select your favorite image by clicking on it to see related product options.
 
+![](https://github.com/TeamZombies/furne_frontend/blob/main/process_diagram.jpg)
+
 ## Prerequisites
 
 This application utilizes
