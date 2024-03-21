@@ -1,6 +1,8 @@
 # Furn-E
 This Vue.js application uses the OpenAI API to generate images based on a user-provided description and presents the generated images for selection. Additionally, it displays product options based on those generated images. Meant to be used with our [Python backend API](https://github.com/TeamZombies/furne_backend_api).
 
+![](https://github.com/TeamZombies/furne_frontend/blob/main/FurnE_preview.jpg)
+
 ## Application Workflow
 
 1. Enter a room description in the provided text field.
